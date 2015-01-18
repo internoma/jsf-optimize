@@ -11,12 +11,20 @@ error_reporting(E_ERROR);
 
 if ( php_sapi_name() !== 'cli' ) exit('Solo para linea de comandos');
 
+/**
+ * Definición de colores de consola CLI
+ * */
+
 $cW = "\033[37m"; // White
 $cG = "\033[32m"; // Green
 $cR = "\033[31m"; // Red
 $cY = "\033[33m"; // Yellow
 $cB = "\033[36m"; // Blue
 $cO = "\033[0m";  // Default
+
+/**
+ * Definición de salida de créditos y ayuda para consola CLI
+ * */
 
 if ($argc == 1 || in_array($argv[1], array('--help', '-help', '-h', '-?'))) {
 $output = <<< EOT
@@ -37,6 +45,10 @@ EOT;
 die($output);
 }
 
+/**
+ * Definición de salida de confirmación de proceso para consola CLI
+ * */
+
 $argDir  = isset($argv[1]) ? $argv[1] : '.';
 $argType = isset($argv[2]) ? $argv[2] : 'ui:composition';
 
@@ -52,15 +64,22 @@ if (strtoupper($response) != 'S') {
    exit;
 }
 
+/**
+ * Inicio del procesamiento
+ * */
+
 $time_start = microtime(true);
 
 echo "\nProcesando... \n\n";
 
+/**
+ * Definición de valores de xmlns
+ * */
 
 $xmlns = array(
 	'xml'       => '<?xml version="1.0" encoding="UTF-8"?>',
 	'dt'        => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
-	'template'  => 'template        = "/PATH/TO/TEMPLATES/template.xhtml"',
+	'template'  => 'template        = "/PATH/FOR/YOUR/TEMPLATES/template.xhtml"',
 
 	'ini'       => 'xmlns           = "http://www.w3.org/1999/xhtml"',
 	'composite' => 'xmlns:composite = "http://java.sun.com/jsf/composite"',
@@ -70,8 +89,13 @@ $xmlns = array(
 	'p'         => 'xmlns:p         = "http://primefaces.prime.com.tr/ui"',
 	'c'         => 'xmlns:c         = "http://java.sun.com/jsp/jstl/core"',
 	'fn'        => 'xmlns:fn        = "http://java.sun.com/jsp/jstl/functions"',
-	'cc'        => 'xmlns:cc        = "http://java.sun.com/jsf/composite/componentes"'
+	'cc'        => 'xmlns:cc        = "http://java.sun.com/jsf/composite/componentes"',
 );
+
+/**
+ * Función getXhtmlFile()
+ * @return array
+ * */
 
 function getXhtmlFile($file) {
 	try {
@@ -95,6 +119,10 @@ function getXhtmlFile($file) {
 	}
 }
 
+/**
+ * Función setHeader()
+ * @return string
+ * */
 
 function setHeader($file, $type='ui:composition') {
 	global $xmlns;
@@ -117,18 +145,14 @@ function setHeader($file, $type='ui:composition') {
 	foreach ($tags as $value) {
 		$out .= PHP_EOL . "\t" . $xmlns[$value];
 	}
-	if ($type == 'ui:composition') {
-		$out .= PHP_EOL . "\t" . $xmlns['template'];
-	}
 	$out .= ' >' . PHP_EOL;
 	return $out;
 }
 
 
-
-/*
-	Ejecución recursiva del programa
- */
+/**
+ * Ejecución recursiva del proceso
+ * */
 
 $dir_iterator = new RecursiveDirectoryIterator($argDir);
 $iterator     = new RecursiveIteratorIterator($dir_iterator, RecursiveIteratorIterator::SELF_FIRST);
@@ -155,6 +179,10 @@ catch (Exception $e) {
 	printf("{$cR}Ha ocurrido un error: {$cY}([%s]){$cR} que no permite el procesamiento.{$cO}\n\n", $e->getMessage());
 	exit;
 }
+
+/**
+ * Definición de salida de conclusión de proceso para consola CLI
+ * */
 
 echo PHP_EOL . "{$cG}Proceso concluido satisfactoriamente..." . PHP_EOL;
 
