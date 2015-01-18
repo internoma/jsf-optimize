@@ -33,7 +33,7 @@ $sR = "\033[7m";  // Style Reverse
 if ($argc == 1 || in_array($argv[1], array('--help', '-help', '-h', '-?'))) {
 $output = <<< EOT
 
-{$cB}{$sB}{$sU}2015 @by Alfredo González P. - v.1.0.0beta{$cO}
+{$cB}{$sB}{$sU}2015 @by Alfredo González P. - v.1.0.1{$cO}
 
 {$cW}Utilidad para procesar archivos JSF y aplicarles los xmlns correctos.
 
@@ -83,7 +83,7 @@ echo "\nProcesando... \n\n";
 $xmlns = array(
 	'xml'       => '<?xml version="1.0" encoding="UTF-8"?>',
 	'dt'        => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
-	'template'  => 'template        = "/PATH/FOR/YOUR/TEMPLATES/template.xhtml"',
+	'template'  => 'template        = "/PATH/FOR/YOUR/TEMPLATE/template.xhtml"',
 
 	'ini'       => 'xmlns           = "http://www.w3.org/1999/xhtml"',
 	'composite' => 'xmlns:composite = "http://java.sun.com/jsf/composite"',
@@ -149,6 +149,9 @@ function setHeader($file, $type='ui:composition') {
 	foreach ($tags as $value) {
 		$out .= PHP_EOL . "\t" . $xmlns[$value];
 	}
+	if ($type == 'ui:composition') {
+		$out .= PHP_EOL . "\t" . $xmlns['template'];
+	}
 	$out .= ' >' . PHP_EOL;
 	return $out;
 }
@@ -158,11 +161,13 @@ function setHeader($file, $type='ui:composition') {
  * Ejecución recursiva del proceso
  * */
 
+
+try {
+
 $dir_iterator = new RecursiveDirectoryIterator($argDir);
 $iterator     = new RecursiveIteratorIterator($dir_iterator, RecursiveIteratorIterator::SELF_FIRST);
 $contador     = 0;
 
-try {
 	foreach ($iterator as $file) {
 		$filename = (string)$file;
 		if (preg_match('/(.+).xhtml/', $filename)){
@@ -183,6 +188,12 @@ catch (Exception $e) {
 	printf("{$cR}Ha ocurrido un error: {$cY}([%s]){$cR} que no permite el procesamiento.{$cO}\n\n", $e->getMessage());
 	exit;
 }
+catch (UnexpectedValueException $e) {
+	printf("{$cR}Ha ocurrido un error: {$cY}([%s]){$cR} que no permite el procesamiento.{$cO}\n\n", $e->getMessage());
+	exit;
+}
+
+
 
 /**
  * Definición de salida de conclusión de proceso para consola CLI
@@ -195,7 +206,3 @@ $time = microtime(true) - $time_start;
 echo "{$cY}Tiempo de ejecucion para {$contador} archivos: {$time} segundos{$cO}";
 
 ?>
-
-
-
-
