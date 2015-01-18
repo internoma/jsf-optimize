@@ -19,8 +19,12 @@ $cW = "\033[37m"; // White
 $cG = "\033[32m"; // Green
 $cR = "\033[31m"; // Red
 $cY = "\033[33m"; // Yellow
-$cB = "\033[36m"; // Blue
+$cB = "\033[36m"; // Light Cyan
 $cO = "\033[0m";  // Default
+$sB = "\033[1m";  // Style Bold
+$sU = "\033[4m";  // Style UnderScore
+$sR = "\033[7m";  // Style Reverse
+
 
 /**
  * Definición de salida de créditos y ayuda para consola CLI
@@ -29,7 +33,7 @@ $cO = "\033[0m";  // Default
 if ($argc == 1 || in_array($argv[1], array('--help', '-help', '-h', '-?'))) {
 $output = <<< EOT
 
-{$cB}2015 @by Alfredo González P. - v.1.0.0beta{$cO}
+{$cB}{$sB}{$sU}2015 @by Alfredo González P. - v.1.0.0beta{$cO}
 
 {$cW}Utilidad para procesar archivos JSF y aplicarles los xmlns correctos.
 
